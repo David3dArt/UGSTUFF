@@ -1,4 +1,4 @@
-    /* --- SCROLLBARS --- */
+/* --- SCROLLBARS --- */
     ::-webkit-scrollbar { 
       width: 0.3rem; 
       background-color: #00000000; 
@@ -14,21 +14,24 @@
 
     body {
       font-family: "Noto Sans Georgian", sans-serif;
-      background: black;
+      background: rgb(15, 14, 13);
       color: #fffbe8;
-      margin: 0;
-      height: 100vh;
+      margin-top: 20px;
+      min-height: 100vh;       /* allow page to grow while still filling viewport */
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start; /* attach to top instead of center */
+      padding-top: 12px;       /* small gap from top */
       transition: 0.3s ease;
+      padding-bottom: 40px;
     }
+
 
     #quiz-container {
       position: relative;
       max-width: 800px;
       width: 100%;
-      padding: 20px;
+      padding: 30px 20px;
       background: #221c17;
       border-radius: 20px;
       box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
@@ -38,6 +41,7 @@
       flex-direction: column;
       align-items: stretch;
       overflow-y: auto;
+      margin-bottom: 40px;
     }
 
     #quiz-container.fade-out { animation: fadeOut 0.2s forwards; }
@@ -100,6 +104,7 @@
       order: 4;
       align-self: center;
     }
+
 
     .option .mjx-chtml { line-height: 1.1; vertical-align: middle; margin: 0; }
     .option.has-math { padding-top: 2px; padding-bottom: 2px; }
@@ -169,3 +174,19 @@
     body.light #close-btn, body.light #mode-switch { color: #573a29; }
     body.light #close-btn:hover, body.light #mode-switch:hover { color: #000; }
     body.light #restart { background: #573a29; color: #f3d3ae; }
+
+    /* Inline image rendering: preserve aspect ratio, center, don't fill/crop */
+    .inline-image,
+    #question .inline-image,
+    #options .inline-image,
+    .option img.inline-image {
+      display: block;
+      margin: 0 auto;
+      max-width: 100%;
+      max-height: 40vh;     /* constrain height so it won't overflow viewport */
+      object-fit: contain;  /* preserve ratio and fit inside bounds */
+      object-position: center;
+    }
+
+
+
