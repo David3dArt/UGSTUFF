@@ -14,7 +14,7 @@
 
     body {
       font-family: "Noto Sans Georgian", sans-serif;
-      background: black;
+      background: white;
       color: #fffbe8;
       margin: 0;
       height: 100vh;
@@ -168,4 +168,5 @@
     body.light #progress-bar { background: #573a29; }
     body.light #close-btn, body.light #mode-switch { color: #573a29; }
     body.light #close-btn:hover, body.light #mode-switch:hover { color: #000; }
+
     body.light #restart { background: #573a29; color: #f3d3ae; }
