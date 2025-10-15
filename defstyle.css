@@ -29,7 +29,7 @@
       max-width: 800px;
       width: 100%;
       padding: 20px;
-      background: #181818;
+      background: #221c17;
       border-radius: 20px;
       box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
       text-align: center;
@@ -340,5 +340,6 @@
         background: #ffe7cb;
       }
     }
+
 
 
