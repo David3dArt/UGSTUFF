@@ -29,7 +29,7 @@
       max-width: 800px;
       width: 100%;
       padding: 20px;
-      background: #181818;
+      background: #221c17;
       border-radius: 20px;
       box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
       text-align: center;
@@ -51,7 +51,7 @@
 
     .option {
       display: block;
-      background: #1c1c1c;
+      background: #312820;
       margin: 16px 0px;
       padding: 10px;
       border-radius: 10px;
@@ -168,11 +168,4 @@
     body.light #progress-bar { background: #573a29; }
     body.light #close-btn, body.light #mode-switch { color: #573a29; }
     body.light #close-btn:hover, body.light #mode-switch:hover { color: #000; }
-
     body.light #restart { background: #573a29; color: #f3d3ae; }
-
-
-
-
-
-
