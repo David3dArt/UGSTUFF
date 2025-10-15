@@ -51,7 +51,7 @@
 
     .option {
       display: block;
-      background: #312820;
+      background: #1c1c1c;
       margin: 16px 0px;
       padding: 10px;
       border-radius: 10px;
@@ -170,6 +170,7 @@
     body.light #close-btn:hover, body.light #mode-switch:hover { color: #000; }
 
     body.light #restart { background: #573a29; color: #f3d3ae; }
+
 
 
 
