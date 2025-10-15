@@ -1,0 +1,43 @@
+<html>
+<head>
+  <!-- MathJax for formulas -->
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Any Quiz</title>
+
+  <!-- 🧾 Paste CSV data here manually -->
+  <script id="csv-data" type="text/csv">
+question,correct,option2,option3,option4,type
+$${2+2=?}$$,4,3,5,2
+  </script>
+
+  <!-- 🎨 load external CSS as code -->
+  <script>
+  async function loadCode(url, tagName) {
+    const res = await fetch(url);
+    const code = await res.text();
+    const el = document.createElement(tagName);
+    el.textContent = code;
+    document.head.appendChild(el);
+  }
+
+  // 🔗 put your real CSS + JS links here 👇
+  loadCode("defstyle.css", "style");
+  loadCode("defscript.js", "script");
+  </script>
+</head>
+
+<body>
+  <!-- 🧱 load main HTML structure dynamically -->
+  <script>
+  async function loadHtml(url) {
+    const res = await fetch(url);
+    const html = await res.text();
+    document.body.innerHTML = html;
+  }
+  // 🔗 your HTML layout file
+  loadHtml("defindex.html");
+  </script>
+</body>
+</html>
