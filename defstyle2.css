@@ -1,4 +1,11 @@
-    /* --- SCROLLBARS --- */
+@font-face {
+font-family: "TBCContractica book";
+src: url("https://github.com/David3dArt/UGSTUFF/raw/refs/heads/main/fonttt/TBCContracticaCAPS-Book.ttf") format("truetype");
+font-display: swap;
+}
+
+
+/* --- SCROLLBARS --- */
     ::-webkit-scrollbar { 
       width: 0.3rem; 
       background-color: #00000000; 
@@ -13,7 +20,7 @@
     }
 
     body {
-      font-family: "Noto Sans Georgian", sans-serif;
+      font-family: "TBCContractica book";
       background: black;
       color: #fffbe8;
       margin: 0;
@@ -339,4 +346,5 @@
       body.light {
         background: #ffe7cb;
       }
+
     }
