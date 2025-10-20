@@ -1,5 +1,4 @@
 window.DEBATE_TOPICS = [
-[
 {
 "title": "Should universities mandate a core financial literacy course?",
 "desc": "ხერხი სჯობია ღონესა — სავალდებულო ფინანსების კურსი დაეხმარება თუ ზედმეტ ბიუროკრატიად იქცევა?",
@@ -736,3 +735,4 @@ window.DEBATE_TOPICS = [
 "tags": ["ethics", "science", "animal-rights", "law"]
 }
 ]
+
