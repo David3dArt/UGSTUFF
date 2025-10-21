@@ -73,7 +73,7 @@ font-display: swap;
       display: block;
       background: #312820;
       margin: 14px 0px;
-      padding: 20px 10px;
+      padding: 10px 20px;
       border-radius: 10px;
       cursor: pointer;
       transition: 0.3s ease;
@@ -313,7 +313,7 @@ font-display: swap;
       }
 
       #progress-container { margin-bottom:3px; }
-      h1 { font-size:16px; }
+      h1 { font-size:1rem; }
       #question h2 { 
         font-size:16px; 
         text-align:center;  
@@ -321,24 +321,24 @@ font-display: swap;
         font-weight:400;
       }
       .option { 
-        font-size:18px; 
+        font-size:1.125rem; 
         padding:2px 0; 
         border:2px solid transparent; 
         margin:10px 0;
       }
       #options { 
         flex:1; 
-        padding-bottom:20px;
-        font-size:18px;
+        padding-bottom:1.25rem;
+        font-size: 1.1rem;
         overflow: hidden; 
-        margin-bottom: 60px;
+        margin-bottom: 20px;
       }
       #result { 
-        font-size:18px; 
+        font-size:1.125rem; 
         margin:10px 0;
       }
       #restart { 
-        font-size:16px; 
+        font-size:1rem; 
         padding:10px 20px;
         margin:10px auto;
       }
@@ -347,6 +347,7 @@ font-display: swap;
         background: #ffe7cb;
       }
     }
+
 
 
 
