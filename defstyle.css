@@ -1,4 +1,3 @@
-
 @font-face {
 font-family: "TBCContractica book";
 src: url("https://github.com/David3dArt/UGSTUFF/raw/refs/heads/main/fonttt/TBCContracticaCAPS-Book.ttf") format("truetype");
@@ -25,10 +24,11 @@ font-display: swap;
       background: black;
       color: #fffbe8;
       margin: 0;
-      height: 100vh;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;    /* attach to top */
+      padding-top: var(--quiz-top, 48px); /* controlled by JS state classes */
       transition: 0.3s ease;
     }
 
@@ -74,7 +74,7 @@ font-display: swap;
       display: block;
       background: #312820;
       margin: 14px 0px;
-      padding: 10px 20px;
+      padding: 10px 10px;
       border-radius: 10px;
       cursor: pointer;
       transition: 0.3s ease;
@@ -84,6 +84,7 @@ font-display: swap;
       letter-spacing: 0.3px;
       line-height: 1.8;
       font-weight: 500;
+      padding-left: 20px;
     }
 
     /* --- FIXED: remove hover color conflict when pressed --- */
@@ -348,6 +349,35 @@ font-display: swap;
         background: #ffe7cb;
       }
     }
+
+    /* Reduce top spacing when quiz grows:
+       - default --quiz-top = 48px (set above via var())
+       - attach-top reduces it
+       - attach-full removes it so the document starts at the very top */
+    body.attach-top { 
+      --quiz-top: 10px;
+    }
+    body.attach-full {
+      --quiz-top: 0px;
+      --border-radius: 0;
+    }
+    /* ensure the container itself uses no rounding in full mode */
+    body.attach-full #quiz-container {
+      border-radius: 0;
+    }
+
+    /* When JS sets the options container to display: grid (inline style),
+       remove the per-option vertical margins so the grid gap controls spacing.
+       This keeps block layout unchanged but fixes the 2x2 spacing imbalance. */
+    #options[style*="display: grid"] .option {
+      margin: 0;
+    }
+
+    /* Ensure the grid uses the intended row/column gaps (row = 12px, column = 15px) */
+    #options[style*="display: grid"] {
+      gap: 12px 15px;
+    }
+
 
 
 
