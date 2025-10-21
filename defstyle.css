@@ -1,3 +1,4 @@
+
 @font-face {
 font-family: "TBCContractica book";
 src: url("https://github.com/David3dArt/UGSTUFF/raw/refs/heads/main/fonttt/TBCContracticaCAPS-Book.ttf") format("truetype");
@@ -28,8 +29,10 @@ font-display: swap;
       display: flex;
       justify-content: center;
       align-items: flex-start;    /* attach to top */
-      padding-top: var(--quiz-top, 48px); /* controlled by JS state classes */
+      padding-top: var(--quiz-top, 100px); /* controlled by JS state classes */
       transition: 0.3s ease;
+      margin-left: 20px;
+      margin-right: 20px;
     }
 
     #quiz-container {
@@ -351,15 +354,15 @@ font-display: swap;
     }
 
     /* Reduce top spacing when quiz grows:
-       - default --quiz-top = 48px (set above via var())
+       - default --quiz-top = 28px (set above via var())
        - attach-top reduces it
        - attach-full removes it so the document starts at the very top */
     body.attach-top { 
-      --quiz-top: 10px;
+      --quiz-top: 30px;
+      overflow-y: hidden;
     }
     body.attach-full {
       --quiz-top: 0px;
-      --border-radius: 0;
     }
     /* ensure the container itself uses no rounding in full mode */
     body.attach-full #quiz-container {
@@ -377,13 +380,3 @@ font-display: swap;
     #options[style*="display: grid"] {
       gap: 12px 15px;
     }
-
-
-
-
-
-
-
-
-
-
