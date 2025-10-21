@@ -1,0 +1,752 @@
+<body>
+  <div id="quiz-container">
+    <div id="top-bar">
+      <div id="progress-container"><div id="progress-bar"></div></div>
+      <span id="mode-switch" onclick="toggleMode()">☀️</span>
+      <span id="close-btn" onclick="deleteCsv()">✖</span>
+    </div>
+
+    <!-- 🔕 Upload area is hidden now -->
+    <div id="upload-area" style="display:none;">ჩააგდე CSV ფაილი აქ</div>
+    <input type="file" id="file-input" accept=".csv" style="display:none">
+
+    <div id="question"></div>
+    <div id="options"></div>
+    <div id="result"></div>
+    <button id="restart" onclick="restartQuiz()">თავიდან დაწყება</button>
+  </div>
+</body>
+
+
+<style>
+@font-face {
+font-family: "TBCContractica book";
+src: url("https://github.com/David3dArt/UGSTUFF/raw/refs/heads/main/fonttt/TBCContracticaCAPS-Book.ttf") format("truetype");
+font-display: swap;
+}
+
+
+/* --- SCROLLBARS --- */
+    ::-webkit-scrollbar { 
+      width: 0.4rem; 
+      background-color: #00000000; 
+    }
+    ::-webkit-scrollbar-track { 
+      border-radius: 10px; 
+      background-color: #18181800; 
+    }
+    ::-webkit-scrollbar-thumb { 
+      background: #fff1e0; 
+      border-radius: 20px; 
+    }
+
+    body {
+      font-family: "TBCContractica book";
+      background: black;
+      color: #fffbe8;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;    /* attach to top */
+      padding-top: var(--quiz-top, 100px); /* controlled by JS state classes */
+      transition: 0.3s ease;
+      margin-left: 20px;
+      margin-right: 20px;
+    }
+
+    #quiz-container {
+      position: relative;
+      max-width: 800px;
+      width: 100%;
+      padding: 20px;
+      background: #221c17;
+      border-radius: 20px;
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
+      text-align: center;
+      transition: 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      overflow-y: auto;
+    }
+
+    /* --- FADE --- */
+    #quiz-container.fade-out { animation: fadeOut 0.2s forwards; }
+    #quiz-container.fade-in { animation: fadeIn 0.2s forwards; }
+    @keyframes fadeOut { 0% {opacity:1;} 100% {opacity:0;} }
+    @keyframes fadeIn { 0% {opacity:0;} 100% {opacity:1;} }
+
+    h1 { 
+      font-size: 1.113rem; 
+      text-align: center; 
+      margin-top: 10px; 
+      transition: 0.3s ease;
+    }
+
+    #question h2 { 
+      font-size:1.313rem; 
+      text-align:center;  
+      margin:10px 0; 
+      font-weight:400;
+      letter-spacing: 0.3px;
+      line-height: 1.4;
+    }
+
+    .option {
+      display: block;
+      background: #312820;
+      margin: 14px 0px;
+      padding: 10px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s ease;
+      border: 2px solid transparent;
+      font-size: 1.125rem;
+      text-align: center;
+      letter-spacing: 0.3px;
+      line-height: 1.8;
+      font-weight: 400;
+      padding-left: 20px;
+    }
+
+    /* --- FIXED: remove hover color conflict when pressed --- */
+    .option:hover:not(.correct):not(.wrong):not(.skip) { 
+      border-color: hsl(28, 21%, 22%); 
+      background: hsl(28, 21%, 18%);
+    }
+
+    .option.correct { 
+      border-color: #39eb33; 
+      background: #312820;
+    }
+
+    .option.wrong { 
+      border-color: #ff2c2c; 
+      background: #312820;
+    }
+
+    .option.skip { 
+      background: #ffddc1; 
+      color: #221c17; 
+      font-weight: 600;
+    }
+
+    .option.skip:hover {
+        background: #ffc077;
+        color: #221c17;
+        border: 2px solid #ffddb3;
+      }
+
+
+    #result { 
+      font-size: 1.25rem; 
+      font-weight: bold; 
+      margin: 10px 0;
+      color: #f3d3ae; 
+      order: 3;
+    }
+
+    #restart {
+      display: none;
+      margin: 10px 0;
+      padding: 15px 15px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 10px;
+      background: #ffddc1; 
+      color: #221c17; 
+      cursor: pointer;
+      font-weight: 600;
+      order: 4;
+      align-self: center;
+    }
+
+    .option .mjx-chtml { 
+      line-height: 1.1; 
+      vertical-align: middle; 
+      margin: 0; 
+    }
+
+    .option.has-math { 
+      padding-top: 2px; 
+      padding-bottom: 2px; 
+    }
+
+    /* --- TOP BAR --- */
+    #top-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    #close-btn { 
+      position: static;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #ffddc1;
+      cursor: pointer;
+      user-select: none;
+      transition: 0.3s ease;
+      margin-left: 10px;
+      margin-right: 5px;
+      display: none; /* hide on startup */
+    }
+
+    #close-btn:hover { color: #ffc49d; transform: scale(1.3);}
+
+    /* --- LIGHT/DARK SWITCH --- */
+    #mode-switch {
+      font-size: 1.25rem;
+      cursor: pointer;
+      color: #000000;
+      user-select: none;
+      transition: 0.3s ease;
+      margin-right: 0;
+    }
+    #mode-switch:hover { color: #ffffff; scale: 1.3; }
+
+    #progress-container { 
+      flex: 1;
+      width: 100%; 
+      background: hsl(50, 10%, 15%); 
+      border-radius: 30px; 
+      height: 10px; 
+      overflow: hidden; 
+      transition: 0.3s ease;
+    }
+
+    #progress-bar { 
+      height: 100%; 
+      width: 0%; 
+      background: #ffce84; 
+      transition: 0.3s ease; 
+      border-radius: inherit; 
+    }
+
+    #upload-area { 
+      border: 2px dashed #f3d3ae; 
+      padding: 30px; 
+      border-radius: 10px; 
+      margin: 20px 0; 
+      cursor: pointer; 
+      transition: 0.3s ease; 
+      font-size: 20px; 
+      order: 2;
+    }
+
+    #upload-area:hover { 
+      border-color: #ffc98b; 
+      font-size: 21px;
+      color: #ffc98b;
+    }
+
+    /* --- LIGHT MODE --- */
+    body.light {
+      background: #cc9867;
+      color: #422c20;
+    }
+    body.light #quiz-container {
+      background: #ffe7cb;
+      color: #573a29;
+    }
+    body.light .option {
+      background: #f3d3ae;
+      color: #422c20;
+      border-color: transparent ;
+      font-weight: 500;
+    }
+
+
+    body.light #result { 
+      font-size: 20px; 
+      font-weight: bold; 
+      margin: 10px 0;
+      color: #573a29; 
+      order: 3;
+    }
+    
+    body.light .option.skip {
+    background: #422c20;
+    color: #f3d3ae;
+    border-color: transparent;
+    }
+
+
+    /* New: hover style for skip button in light mode */
+    body.light .option.skip:hover {
+      background: #6e4933;
+      border-color: rgb(167, 117, 89);
+    }
+
+    body.light .option:hover:not(.correct):not(.wrong):not(.skip) {
+      background-color: #ffe0bd;
+      border-color: #d39f64; 
+    }
+
+    body.light .option.correct { 
+      border-color: #239914; 
+      background: #f3d3ae;
+    }
+    body.light .option.wrong { 
+      border-color: #bd1a1a; 
+      background: #f3d3ae;
+    }
+    body.light #progress-container {
+      background: #f3d3ae;
+    }
+    body.light #progress-bar {
+      background: #573a29;
+    }
+    body.light #upload-area {
+      border-color: #573a29;
+      color: #573a29;
+      font-weight: 600;
+    }
+    body.light #close-btn,
+    body.light #mode-switch {
+      color: #573a29;
+    }
+    body.light #close-btn:hover,
+    body.light #mode-switch:hover {
+      color: #000;
+    }
+    body.light #restart {
+      background: #573a29;
+      color: #f3d3ae;
+    }
+
+    /* --- MOBILE --- */
+    @media (max-width: 768px) {
+      body { 
+        align-items: flex-start; 
+        padding-top:0; 
+        background-color: #221c17; 
+        overflow: auto; 
+      }
+
+      #quiz-container { 
+        max-width:100%; 
+        width:100%; 
+        border-radius:0; 
+        box-shadow:none; 
+        padding:20px 15px; 
+        height:auto; 
+        display:flex; 
+        flex-direction:column;
+      }
+
+      #progress-container { margin-bottom:3px; }
+      h1 { font-size:1rem; }
+      #question h2 { 
+        font-size:1.25rem; 
+        text-align:center;  
+        margin:10px 0; 
+        font-weight:400;
+      }
+      .option { 
+        font-size:1.125rem; 
+        padding:2px 0; 
+        border:2px solid transparent; 
+        margin:10px 0;
+      }
+      #options { 
+        flex:1; 
+        padding-bottom:1.25rem;
+        font-size: 1.1rem;
+        overflow: hidden; 
+        margin-bottom: 20px;
+      }
+      #result { 
+        font-size:1.125rem; 
+        margin:10px 0;
+      }
+      #restart { 
+        font-size:1rem; 
+        padding:10px 20px;
+        margin:10px auto;
+      }
+
+      body.light {
+        background: #ffe7cb;
+      }
+    }
+
+    /* Reduce top spacing when quiz grows:
+       - default --quiz-top = 28px (set above via var())
+       - attach-top reduces it
+       - attach-full removes it so the document starts at the very top */
+    body.attach-top { 
+      --quiz-top: 30px;
+      overflow-y: hidden;
+    }
+    body.attach-full {
+      --quiz-top: 0px;
+    }
+    /* ensure the container itself uses no rounding in full mode */
+    body.attach-full #quiz-container {
+      border-radius: 0;
+    }
+
+    /* When JS sets the options container to display: grid (inline style),
+       remove the per-option vertical margins so the grid gap controls spacing.
+       This keeps block layout unchanged but fixes the 2x2 spacing imbalance. */
+    #options[style*="display: grid"] .option {
+      margin: 0;
+    }
+
+    /* Ensure the grid uses the intended row/column gaps (row = 12px, column = 15px) */
+    #options[style*="display: grid"] {
+      gap: 12px 15px;
+    }
+</style>
+
+<script>
+/* Fixed script: ensures options always render on first load even with MathJax */
+let questions = [];
+let currentQuestion = 0;
+let score = 0;
+let answered = false;
+let allQuestionsGlobal = [];
+let usedQuestions = [];
+let batchSize = 10;
+let isLightMode = false;
+
+/* Cookies for mode (unchanged) */
+function setCookie(name, value, days) {
+  const d = new Date();
+  d.setTime(d.getTime() + (days*24*60*60*1000));
+  document.cookie = name + "=" + value + ";expires=" + d.toUTCString() + ";path=/;SameSite=Lax";
+}
+function getCookie(name) {
+  const n = name + "=";
+  const ca = document.cookie.split(';');
+  for(let c of ca) { c = c.trim(); if (c.indexOf(n) === 0) return c.substring(n.length, c.length); }
+  return "";
+}
+function applySavedMode() {
+  const saved = getCookie("quizMode");
+  if (saved === "light") {
+    isLightMode = true;
+    document.body.classList.add("light");
+    const ms = document.getElementById("mode-switch");
+    if(ms) ms.textContent = "🌑";
+  }
+}
+applySavedMode();
+
+function toggleMode() {
+  const modeSwitch = document.getElementById("mode-switch");
+  isLightMode = !isLightMode;
+  if (isLightMode) {
+    document.body.classList.add("light");
+    if(modeSwitch) modeSwitch.textContent = "🌑";
+    setCookie("quizMode", "light", 365);
+  } else {
+    document.body.classList.remove("light");
+    if(modeSwitch) modeSwitch.textContent = "☀️";
+    setCookie("quizMode", "dark", 365);
+  }
+}
+
+function shuffle(array){return array.sort(()=>Math.random()-0.5);}
+function getNextBatch(){
+  let remaining=allQuestionsGlobal.filter(q=>!usedQuestions.includes(q));
+  if(remaining.length===0)return[];
+  let shuffled=shuffle([...remaining]);
+  let batch=shuffled.slice(0,batchSize);
+  usedQuestions.push(...batch);
+  return batch;
+}
+function updateProgressBar(){
+  let percent=((currentQuestion)/questions.length)*100;
+  const bar = document.getElementById("progress-bar");
+  if(bar) bar.style.width=percent+"%";
+}
+
+/* CLICK LAYER (unchanged) */
+let clickLayer=document.createElement("div");
+clickLayer.style.position="absolute";
+clickLayer.style.top=0;
+clickLayer.style.left=0;
+clickLayer.style.width="100%";
+clickLayer.style.height="100%";
+clickLayer.style.zIndex=500;
+clickLayer.style.cursor="pointer";
+clickLayer.style.display="none";
+clickLayer.style.backgroundColor="rgba(0,0,0,0)";
+const quizContainerEl = document.getElementById("quiz-container");
+if(quizContainerEl) quizContainerEl.appendChild(clickLayer);
+clickLayer.addEventListener("click",()=>{clickLayer.style.display="none";currentQuestion++;loadQuestion();});
+
+/* --- attach-top / attach-full helper --- */
+function checkAttachTop(){
+  const quizContainer = document.getElementById("quiz-container");
+  if(!quizContainer) return;
+  const h = quizContainer.offsetHeight;
+  const vh = window.innerHeight;
+  // if container is near-or-above full viewport height -> full document mode
+  if (h >= vh - 8) {
+    document.body.classList.remove("attach-top");
+    document.body.classList.add("attach-full");
+  }
+  // if container >= 50vh -> attach to top (fixed & centered)
+  else if (h >= vh * 0.5) {
+    document.body.classList.remove("attach-full");
+    document.body.classList.add("attach-top");
+  } else {
+    document.body.classList.remove("attach-full", "attach-top");
+  }
+}
+
+/* ASYNC renderText that WAITs MathJax (safe if no MathJax) */
+async function renderText(text, container){
+  // hide while rendering to avoid flicker
+  container.style.visibility = "hidden";
+
+  // IMAGE pattern: entire text is ## <url> ##
+  const imgMatch = String(text || "").match(/^\s*##\s*(https?:\/\/\S+)\s*##\s*$/i);
+  if (imgMatch) {
+    const url = imgMatch[1];
+    container.innerHTML = ""; // clear
+    const img = document.createElement("img");
+    img.src = url;
+    img.alt = "";
+    img.className = "inline-image";
+    // append immediately so CSS sizing can apply and loading starts
+    container.appendChild(img);
+    container.classList.remove("has-math");
+    container.style.padding = "10px 0";
+    // wait for load (or timeout) so layout is stable when shown
+    try {
+      await new Promise((resolve) => {
+        let done = false;
+        const finish = () => { if (!done) { done = true; resolve(); } };
+        img.onload = finish;
+        img.onerror = finish;
+        // fallback timeout (2s)
+        setTimeout(finish, 2000);
+      });
+    } catch(e){
+      console.warn("Image load wait error:", e);
+    }
+    container.style.visibility = "visible";
+    // re-evaluate attach state after image is ready
+    checkAttachTop();
+    return;
+  }
+
+  // MATHJAX handling (unchanged behavior)
+  if(text.includes("$$")){
+    container.innerHTML=text.replace(/\$\$(.*?)\$\$/g,(_,expr)=>`<span class="latex">\\(${expr}\\)</span>`);
+    container.classList.add("has-math");
+    container.style.padding="20px 0";
+    try {
+      if (window.MathJax) {
+        if (MathJax.startup && MathJax.startup.promise) {
+          await MathJax.startup.promise;
+        }
+        if (MathJax.typesetPromise) {
+          await MathJax.typesetPromise([container]);
+        }
+      }
+    } catch(e){
+      console.warn("MathJax render error:", e);
+    }
+    container.style.visibility = "visible";
+  } else {
+    container.textContent=text;
+    container.classList.remove("has-math");
+    container.style.padding="10px 0";
+    container.style.visibility = "visible";
+  }
+
+  // re-evaluate attach state after regular rendering too
+  checkAttachTop();
+}
+
+/* loadQuestion now AWAITS renderText for question + every option */
+async function loadQuestion(skipAnimation=false){
+  const quizContainer=document.getElementById("quiz-container");
+  if(!quizContainer) return;
+  if(!skipAnimation) quizContainer.classList.add("fade-out");
+  setTimeout(async ()=>{
+    if(!skipAnimation) quizContainer.classList.remove("fade-out");
+    updateProgressBar();
+    answered=false;
+    clickLayer.style.display="none";
+
+    const qCount = (questions && questions.length) || 0;
+    if(currentQuestion < qCount){
+      let q = questions[currentQuestion];
+      const questionContainer = document.getElementById("question");
+      questionContainer.innerHTML = "";
+      const h2 = document.createElement("h2");
+      questionContainer.appendChild(h2);
+
+      // render question and await MathJax if present
+      await renderText(q.question, h2);
+
+      const optionsContainer = document.getElementById("options");
+      optionsContainer.innerHTML = "";
+      // hide options container until all options are fully rendered
+      optionsContainer.style.visibility = "hidden";
+
+      let shortOptions = q.options.every(opt => opt.trim().split(/\s+/).length < 3);
+      if(q.type === "1" && shortOptions){
+        optionsContainer.style.display = "grid";
+        optionsContainer.style.gridTemplateColumns = "1fr 1fr";
+        optionsContainer.style.columnGap = "15px";
+        optionsContainer.style.rowGap = "12px";
+      } else {
+        optionsContainer.style.display = "block";
+      }
+
+      // render options one-by-one and await MathJax for each
+      for (let opt of q.options) {
+        const div = document.createElement("div");
+        div.className = "option";
+        div.dataset.answer = opt;
+        optionsContainer.appendChild(div);
+        await renderText(opt, div); // await ensures proper layout when math exists
+        // attach click handler after rendering to avoid race
+        div.addEventListener("click", ()=> checkAnswer(div, div.dataset.answer, q.correct));
+      }
+
+      // skip button (render text without MathJax)
+      const skipDiv = document.createElement("div");
+      skipDiv.className = "option skip";
+      skipDiv.textContent = "გამოტოვება";
+      skipDiv.addEventListener("click", ()=>{
+        answered = true;
+        document.querySelectorAll(".option").forEach(opt=>{
+          if(opt.dataset.answer === q.correct) opt.classList.add("correct");
+          opt.style.pointerEvents = "none";
+        });
+        clickLayer.style.display = "block";
+      });
+      optionsContainer.appendChild(skipDiv);
+
+      // final typeset for options container if MathJax exists (extra safety)
+      try {
+        if(window.MathJax && MathJax.typesetPromise){
+          await MathJax.typesetPromise([optionsContainer]);
+        }
+      } catch(e){ console.warn("MathJax final typeset error:", e); }
+
+      // now show options container
+      optionsContainer.style.visibility = "visible";
+
+      // re-evaluate attach state after full question rendered
+      checkAttachTop();
+
+      if(!skipAnimation){
+        quizContainer.classList.add("fade-in");
+        setTimeout(()=>quizContainer.classList.remove("fade-in"),200);
+      }
+
+    } else {
+      // quiz finished
+      document.getElementById("question").innerHTML = "";
+      document.getElementById("options").innerHTML = "";
+      document.getElementById("result").innerHTML = `ქვიზი დასრულდა, თქვენ დააგროვეთ ${score} სწორი პასუხი.`;
+      let nextBatch = getNextBatch();
+      if(nextBatch.length > 0){
+        document.getElementById("result").innerHTML += "<br>დააჭირეთ 'თავიდან დაწყებას' ახლიდან დასაწყებად.";
+      }
+      document.getElementById("restart").style.display = "inline-block";
+    }
+  }, skipAnimation ? 0 : 200);
+}
+
+function checkAnswer(element, answer, correct){
+  if(answered) return;
+  answered = true;
+  if(answer === correct){
+    element.classList.add("correct");
+    score++;
+  } else {
+    element.classList.add("wrong");
+    document.querySelectorAll(".option").forEach(opt => {
+      if(opt.dataset.answer === correct) opt.classList.add("correct");
+    });
+  }
+  document.querySelectorAll(".option").forEach(opt => opt.style.pointerEvents = "none");
+  setTimeout(()=>{ clickLayer.style.display = "block"; }, 200);
+}
+
+function restartQuiz(){
+  if(allQuestionsGlobal.length === 0) return;
+  usedQuestions = [];
+  questions = getNextBatch();
+  currentQuestion = 0;
+  score = 0;
+  answered = false;
+  const res = document.getElementById("result");
+  if(res) res.innerHTML = "";
+  const rstBtn = document.getElementById("restart");
+  if(rstBtn) rstBtn.style.display = "none";
+  loadQuestion(true);
+}
+
+/* reset button handler (top right) */
+function resetQuiz(){
+  restartQuiz();
+}
+
+/* deleteCsv kept but not used as requested */
+function deleteCsv(){
+  questions=[];currentQuestion=0;score=0;answered=false;usedQuestions=[];allQuestionsGlobal=[];
+  const res = document.getElementById("result"); if(res) res.innerHTML="";
+  const qEl = document.getElementById("question"); if(qEl) qEl.innerHTML="";
+  const optEl = document.getElementById("options"); if(optEl) optEl.innerHTML="";
+  const rest = document.getElementById("restart"); if(rest) rest.style.display="none";
+  const pb = document.getElementById("progress-bar"); if(pb) pb.style.width="0%";
+  const closeBtn = document.getElementById("close-btn"); if(closeBtn) closeBtn.style.display="none";
+}
+
+/* CSV PARSING (unchanged) */
+function parseCSV(text){
+  let rows = text.trim().split(/\r?\n/).map(r=>r.split(",").map(x=>x.trim()));
+  rows.shift();
+  return shuffle(rows.map(r=>{
+    let options=[r[1],r[2],r[3],r[4]];
+    return { question:r[0], options: shuffle([...options]), correct: r[1], type: r[5]||"" };
+  }));
+}
+
+/* AUTO START: wait for DOM + MathJax startup (if present) */
+window.addEventListener("DOMContentLoaded", async ()=>{
+  // if MathJax isn't done loading yet, wait for its startup promise
+  try {
+    if(window.MathJax && MathJax.startup && MathJax.startup.promise){
+      await MathJax.startup.promise;
+    }
+  } catch(e){
+    console.warn("MathJax startup wait failed:", e);
+  }
+
+  const csvScript = document.getElementById("csv-data");
+  const csvText = csvScript ? csvScript.textContent.trim() : "";
+  if(csvText){
+    allQuestionsGlobal = parseCSV(csvText);
+    usedQuestions = [];
+    questions = getNextBatch();
+
+    const closeBtn = document.getElementById("close-btn");
+    if(closeBtn){
+      closeBtn.style.display = "block";
+      closeBtn.textContent = "🔄";
+      closeBtn.onclick = resetQuiz;
+    }
+    // ensure elements exist and start: WAIT a tick so layout is stable, then load
+    setTimeout(()=>{ loadQuestion(true); }, 20);
+  }
+
+  // ensure attach check runs on start and on resize
+  checkAttachTop();
+  window.addEventListener("resize", ()=>{ checkAttachTop(); });
+
+});
+</script>
