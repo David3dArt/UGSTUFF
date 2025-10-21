@@ -1,3 +1,4 @@
+
 /* Fixed script: ensures options always render on first load even with MathJax */
 let questions = [];
 let currentQuestion = 0;
@@ -75,16 +76,68 @@ const quizContainerEl = document.getElementById("quiz-container");
 if(quizContainerEl) quizContainerEl.appendChild(clickLayer);
 clickLayer.addEventListener("click",()=>{clickLayer.style.display="none";currentQuestion++;loadQuestion();});
 
+/* --- attach-top / attach-full helper --- */
+function checkAttachTop(){
+  const quizContainer = document.getElementById("quiz-container");
+  if(!quizContainer) return;
+  const h = quizContainer.offsetHeight;
+  const vh = window.innerHeight;
+  // if container is near-or-above full viewport height -> full document mode
+  if (h >= vh - 8) {
+    document.body.classList.remove("attach-top");
+    document.body.classList.add("attach-full");
+  }
+  // if container >= 50vh -> attach to top (fixed & centered)
+  else if (h >= vh * 0.5) {
+    document.body.classList.remove("attach-full");
+    document.body.classList.add("attach-top");
+  } else {
+    document.body.classList.remove("attach-full", "attach-top");
+  }
+}
+
 /* ASYNC renderText that WAITs MathJax (safe if no MathJax) */
 async function renderText(text, container){
-  // ensure container is hidden while rendering to avoid flicker
+  // hide while rendering to avoid flicker
   container.style.visibility = "hidden";
+
+  // IMAGE pattern: entire text is ## <url> ##
+  const imgMatch = String(text || "").match(/^\s*##\s*(https?:\/\/\S+)\s*##\s*$/i);
+  if (imgMatch) {
+    const url = imgMatch[1];
+    container.innerHTML = ""; // clear
+    const img = document.createElement("img");
+    img.src = url;
+    img.alt = "";
+    img.className = "inline-image";
+    // append immediately so CSS sizing can apply and loading starts
+    container.appendChild(img);
+    container.classList.remove("has-math");
+    container.style.padding = "10px 0";
+    // wait for load (or timeout) so layout is stable when shown
+    try {
+      await new Promise((resolve) => {
+        let done = false;
+        const finish = () => { if (!done) { done = true; resolve(); } };
+        img.onload = finish;
+        img.onerror = finish;
+        // fallback timeout (2s)
+        setTimeout(finish, 2000);
+      });
+    } catch(e){
+      console.warn("Image load wait error:", e);
+    }
+    container.style.visibility = "visible";
+    // re-evaluate attach state after image is ready
+    checkAttachTop();
+    return;
+  }
+
+  // MATHJAX handling (unchanged behavior)
   if(text.includes("$$")){
-    // convert $$...$$ to inline spans for MathJax
-    container.innerHTML = text.replace(/\$\$(.*?)\$\$/g, (_,expr) => `<span class="latex">\\(${expr}\\)</span>`);
+    container.innerHTML=text.replace(/\$\$(.*?)\$\$/g,(_,expr)=>`<span class="latex">\\(${expr}\\)</span>`);
     container.classList.add("has-math");
-    container.style.padding = "20px 0";
-    // Wait for MathJax to be ready + typeset container
+    container.style.padding="20px 0";
     try {
       if (window.MathJax) {
         if (MathJax.startup && MathJax.startup.promise) {
@@ -95,16 +148,18 @@ async function renderText(text, container){
         }
       }
     } catch(e){
-      // if MathJax fails, still continue
       console.warn("MathJax render error:", e);
     }
     container.style.visibility = "visible";
   } else {
-    container.textContent = text;
+    container.textContent=text;
     container.classList.remove("has-math");
-    container.style.padding = "10px 0";
+    container.style.padding="10px 0";
     container.style.visibility = "visible";
   }
+
+  // re-evaluate attach state after regular rendering too
+  checkAttachTop();
 }
 
 /* loadQuestion now AWAITS renderText for question + every option */
@@ -178,6 +233,9 @@ async function loadQuestion(skipAnimation=false){
 
       // now show options container
       optionsContainer.style.visibility = "visible";
+
+      // re-evaluate attach state after full question rendered
+      checkAttachTop();
 
       if(!skipAnimation){
         quizContainer.classList.add("fade-in");
@@ -281,4 +339,9 @@ window.addEventListener("DOMContentLoaded", async ()=>{
     // ensure elements exist and start: WAIT a tick so layout is stable, then load
     setTimeout(()=>{ loadQuestion(true); }, 20);
   }
+
+  // ensure attach check runs on start and on resize
+  checkAttachTop();
+  window.addEventListener("resize", ()=>{ checkAttachTop(); });
+
 });
