@@ -73,7 +73,7 @@ font-display: swap;
       display: block;
       background: #312820;
       margin: 16px 0px;
-      padding: 10px;
+      padding: 10px 20px;
       border-radius: 10px;
       cursor: pointer;
       transition: 0.3s ease;
@@ -347,6 +347,7 @@ font-display: swap;
         background: #ffe7cb;
       }
     }
+
 
 
 
