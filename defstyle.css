@@ -61,7 +61,7 @@ font-display: swap;
     }
 
     #question h2 { 
-      font-size:21px; 
+      font-size:1.313px; 
       text-align:center;  
       margin:10px 0; 
       font-weight:600;
@@ -72,13 +72,13 @@ font-display: swap;
     .option {
       display: block;
       background: #312820;
-      margin: 16px 0px;
-      padding: 10px 20px;
+      margin: 14px 0px;
+      padding: 20px 10px;
       border-radius: 10px;
       cursor: pointer;
       transition: 0.3s ease;
       border: 2px solid transparent;
-      font-size: 21px;
+      font-size: 1.125rem;
       text-align: center;
       letter-spacing: 0.3px;
       line-height: 1.8;
@@ -347,6 +347,7 @@ font-display: swap;
         background: #ffe7cb;
       }
     }
+
 
 
 
