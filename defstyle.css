@@ -54,14 +54,14 @@ font-display: swap;
     @keyframes fadeIn { 0% {opacity:0;} 100% {opacity:1;} }
 
     h1 { 
-      font-size: 16px; 
+      font-size: 1.113rem; 
       text-align: center; 
       margin-top: 10px; 
       transition: 0.3s ease;
     }
 
     #question h2 { 
-      font-size:1.313px; 
+      font-size:1.313rem; 
       text-align:center;  
       margin:10px 0; 
       font-weight:600;
@@ -115,7 +115,7 @@ font-display: swap;
 
 
     #result { 
-      font-size: 20px; 
+      font-size: 1.25rem; 
       font-weight: bold; 
       margin: 10px 0;
       color: #f3d3ae; 
@@ -126,7 +126,7 @@ font-display: swap;
       display: none;
       margin: 10px 0;
       padding: 15px 15px;
-      font-size: 18px;
+      font-size: 1.1rem;
       border: none;
       border-radius: 10px;
       background: #ffddc1; 
@@ -158,7 +158,7 @@ font-display: swap;
 
     #close-btn { 
       position: static;
-      font-size: 20px;
+      font-size: 1.25rem;
       font-weight: 600;
       color: #ffddc1;
       cursor: pointer;
@@ -173,7 +173,7 @@ font-display: swap;
 
     /* --- LIGHT/DARK SWITCH --- */
     #mode-switch {
-      font-size: 20px;
+      font-size: 1.25rem;
       cursor: pointer;
       color: #000000;
       user-select: none;
@@ -347,6 +347,7 @@ font-display: swap;
         background: #ffe7cb;
       }
     }
+
 
 
 
