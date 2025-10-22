@@ -1,8 +1,19 @@
 @font-face {
-font-family: "TBCContractica book";
-src: url("https://github.com/David3dArt/UGSTUFF/raw/refs/heads/main/fonttt/TBCContracticaCAPS-Book.ttf") format("truetype");
-font-display: swap;
+    font-family: 'TBC Contractica';
+    src: url('https://github.com/David3dArt/UGSTUFF/raw/refs/heads/main/css%20font/TBCContracticaCAPS-Book.woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
 }
+
+@font-face {
+    font-family: 'TBC Contractica';
+    src: url('https://github.com/David3dArt/UGSTUFF/raw/refs/heads/main/css%20font/TBCContracticaCAPS-Bold.woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
 
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@100..900&display=swap');
 
@@ -32,7 +43,7 @@ font-display: swap;
       transition: 0.3s ease;
       margin-left: 20px;
       margin-right: 20px;
-      font-family: "Noto Sans Georgian", sans-serif;
+      font-family: 'TBC Contractica';
     }
 
     #quiz-container {
@@ -380,6 +391,7 @@ font-display: swap;
     #options[style*="display: grid"] {
       gap: 12px 15px;
     }
+
 
 
 
