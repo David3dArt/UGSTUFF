@@ -1,4 +1,5 @@
 
+
 @font-face {
 font-family: "TBCContractica book";
 src: url("https://github.com/David3dArt/UGSTUFF/raw/refs/heads/main/fonttt/TBCContracticaCAPS-Book.ttf") format("truetype");
@@ -36,11 +37,12 @@ font-display: swap;
     }
 
     #quiz-container {
+      font-family: "TBCContractica book";
       position: relative;
       max-width: 800px;
       width: 100%;
       padding: 20px;
-      background: #221c17;
+      background: hsl(19, 38%, 15%);
       border-radius: 20px;
       box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
       text-align: center;
@@ -58,6 +60,7 @@ font-display: swap;
     @keyframes fadeIn { 0% {opacity:0;} 100% {opacity:1;} }
 
     h1 { 
+      font-family: "TBCContractica book";
       font-size: 1.113rem; 
       text-align: center; 
       margin-top: 10px; 
@@ -65,6 +68,7 @@ font-display: swap;
     }
 
     #question h2 { 
+      font-family: "TBCContractica book";
       font-size:1.313rem; 
       text-align:center;  
       margin:10px 0; 
@@ -74,8 +78,9 @@ font-display: swap;
     }
 
     .option {
+      font-family: "TBCContractica book";
       display: block;
-      background: #312820;
+      background: hsl(19, 38%, 22%);
       margin: 14px 0px;
       padding: 10px 10px;
       border-radius: 10px;
@@ -92,8 +97,8 @@ font-display: swap;
 
     /* --- FIXED: remove hover color conflict when pressed --- */
     .option:hover:not(.correct):not(.wrong):not(.skip) { 
-      border-color: hsl(28, 21%, 22%); 
-      background: hsl(28, 21%, 18%);
+      border-color: hsl(19, 38%, 22%); 
+      background: hsl(19, 37%, 19%);
     }
 
     .option.correct { 
@@ -107,15 +112,15 @@ font-display: swap;
     }
 
     .option.skip { 
-      background: #ffddc1; 
-      color: #221c17; 
-      font-weight: 600;
+      background: hsl(19, 46%, 29%); 
+      color: hsl(18, 100%, 90%); 
+      font-weight: 400;
     }
 
     .option.skip:hover {
-        background: #ffc077;
-        color: #221c17;
-        border: 2px solid #ffddb3;
+        background: hsl(18, 46%, 33%);
+        color: #ffffff;
+        border: 2px solid hsl(19, 46%, 42%);
       }
 
 
@@ -125,6 +130,7 @@ font-display: swap;
       margin: 10px 0;
       color: #f3d3ae; 
       order: 3;
+      font-family: "TBCContractica book";
     }
 
     #restart {
@@ -140,6 +146,7 @@ font-display: swap;
       font-weight: 600;
       order: 4;
       align-self: center;
+      font-family: "TBCContractica book";
     }
 
     .option .mjx-chtml { 
@@ -172,6 +179,7 @@ font-display: swap;
       margin-left: 10px;
       margin-right: 5px;
       display: none; /* hide on startup */
+      font-family: "TBCContractica book";
     }
 
     #close-btn:hover { color: #ffc49d; transform: scale(1.3);}
@@ -380,5 +388,13 @@ font-display: swap;
     #options[style*="display: grid"] {
       gap: 12px 15px;
     }
+
+
+
+
+
+
+
+
 
 
