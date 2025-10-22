@@ -4,6 +4,7 @@ src: url("https://github.com/David3dArt/UGSTUFF/raw/refs/heads/main/fonttt/TBCCo
 font-display: swap;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@100..900&display=swap');
 
 /* --- SCROLLBARS --- */
     ::-webkit-scrollbar { 
@@ -20,7 +21,6 @@ font-display: swap;
     }
 
     body {
-      font-family: "TBCContractica book";
       background: black;
       color: #fffbe8;
       margin: 0;
@@ -32,10 +32,10 @@ font-display: swap;
       transition: 0.3s ease;
       margin-left: 20px;
       margin-right: 20px;
+      font-family: "Noto Sans Georgian", sans-serif;
     }
 
     #quiz-container {
-      font-family: "TBCContractica book";
       position: relative;
       max-width: 800px;
       width: 100%;
@@ -58,7 +58,6 @@ font-display: swap;
     @keyframes fadeIn { 0% {opacity:0;} 100% {opacity:1;} }
 
     h1 { 
-      font-family: "TBCContractica book";
       font-size: 1.113rem; 
       text-align: center; 
       margin-top: 10px; 
@@ -66,7 +65,6 @@ font-display: swap;
     }
 
     #question h2 { 
-      font-family: "TBCContractica book";
       font-size:1.313rem; 
       text-align:center;  
       margin:10px 0; 
@@ -76,7 +74,6 @@ font-display: swap;
     }
 
     .option {
-      font-family: "TBCContractica book";
       display: block;
       background: hsl(19, 38%, 22%);
       margin: 14px 0px;
@@ -128,7 +125,6 @@ font-display: swap;
       margin: 10px 0;
       color: #f3d3ae; 
       order: 3;
-      font-family: "TBCContractica book";
     }
 
     #restart {
@@ -144,7 +140,6 @@ font-display: swap;
       font-weight: 600;
       order: 4;
       align-self: center;
-      font-family: "TBCContractica book";
     }
 
     .option .mjx-chtml { 
@@ -177,7 +172,6 @@ font-display: swap;
       margin-left: 10px;
       margin-right: 5px;
       display: none; /* hide on startup */
-      font-family: "TBCContractica book";
     }
 
     #close-btn:hover { color: #ffc49d; transform: scale(1.3);}
